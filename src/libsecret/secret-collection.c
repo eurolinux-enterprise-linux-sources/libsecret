@@ -16,12 +16,13 @@
 
 #include "secret-collection.h"
 #include "secret-dbus-generated.h"
-#include "secret-enum-types.h"
 #include "secret-item.h"
 #include "secret-paths.h"
 #include "secret-private.h"
 #include "secret-service.h"
 #include "secret-types.h"
+
+#include "libsecret/secret-enum-types.h"
 
 #include <glib/gi18n-lib.h>
 
@@ -40,10 +41,7 @@
  * lookup the items in the collection. There may not be any items exposed when
  * the collection is locked.
  *
- * These functions have an unstable API and may change across versions. Use
- * <literal>libsecret-unstable</literal> package to access them.
- *
- * Stability: Unstable
+ * Stability: Stable
  */
 
 /**
@@ -1467,7 +1465,7 @@ secret_collection_search (SecretCollection *self,
  *
  * Complete asynchronous operation to search for items in a collection.
  *
- * Returns: (transfer full) (element-type SecretUnstable.Item):
+ * Returns: (transfer full) (element-type Secret.Item):
  *          a list of items that matched the search
  */
 GList *
@@ -1557,7 +1555,7 @@ collection_load_items_sync (SecretCollection *self,
  * This function may block indefinetely. Use the asynchronous version
  * in user interface threads.
  *
- * Returns: (transfer full) (element-type SecretUnstable.Item):
+ * Returns: (transfer full) (element-type Secret.Item):
  *          a list of items that matched the search
  */
 GList *
@@ -1778,7 +1776,7 @@ secret_collection_get_flags (SecretCollection *self)
  *
  * Get the list of items in this collection.
  *
- * Returns: (transfer full) (element-type SecretUnstable.Item): a list of items,
+ * Returns: (transfer full) (element-type Secret.Item): a list of items,
  * when done, the list should be freed with g_list_free, and each item should
  * be released with g_object_unref()
  */

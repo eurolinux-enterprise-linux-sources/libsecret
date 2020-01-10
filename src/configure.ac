@@ -1,8 +1,29 @@
 AC_PREREQ(2.63)
 
-AC_INIT([libsecret],[0.15],
+AC_INIT([libsecret],[0.18.2],
         [http://bugzilla.gnome.org/enter_bug.cgi?product=libsecret],
         [libsecret])
+
+dnl ****************************************************************************
+dnl Dependency versions
+
+# Required
+
+GLIB_REQ=2.38.0
+GLIB_MIN=GLIB_VERSION_2_38
+GLIB_MAX=GLIB_VERSION_2_38
+
+INTLTOOL_REQ=0.35.0
+
+# Optional
+
+VALA_WANT=0.17.2.12
+
+GCRYPT_WANT=1.2.2
+
+GTKDOC_WANT=1.9
+
+GIR_WANT=1.29
 
 dnl ****************************************************************************
 dnl Library package and libtool versioning
@@ -24,7 +45,8 @@ SECRET_AGE=0
 # -----------------------------------------------------------------------------
 
 AC_CONFIG_MACRO_DIR([build/m4])
-AM_INIT_AUTOMAKE([1.11 tar-ustar foreign -Wno-portability])
+AC_CONFIG_AUX_DIR([build])
+AM_INIT_AUTOMAKE([1.11 tar-ustar foreign -Wno-portability subdir-objects])
 AM_SANITY_CHECK
 AC_CONFIG_HEADERS(config.h)
 AC_CONFIG_SRCDIR([libsecret/secret-value.c])
@@ -43,7 +65,7 @@ AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
 AM_PROG_LIBTOOL
-IT_PROG_INTLTOOL([0.35.0])
+IT_PROG_INTLTOOL($INTLTOOL_REQ)
 AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
 
 GETTEXT_PACKAGE=libsecret
@@ -60,22 +82,22 @@ AC_CHECK_FUNCS(mlock)
 # GLib
 
 PKG_CHECK_MODULES(GLIB,
-	glib-2.0 >= 2.32.0
-	gio-2.0 >= 2.32.0
+	glib-2.0 >= $GLIB_REQ
+	gio-2.0
 	gio-unix-2.0)
 LIBS="$LIBS $GLIB_LIBS"
-CFLAGS="$CFLAGS $GLIB_CFLAGS"
+CFLAGS="$CFLAGS $GLIB_CFLAGS -DGLIB_VERSION_MIN_REQUIRED=$GLIB_MIN -DGLIB_VERSION_MAX_ALLOWED=$GLIB_MAX"
 
-GTK_DOC_CHECK(1.9)
+GTK_DOC_CHECK($GTKDOC_WANT)
 
-GOBJECT_INTROSPECTION_CHECK([1.29])
+GOBJECT_INTROSPECTION_CHECK($GIR_WANT)
 AC_PATH_PROG(GLIB_MKENUMS, glib-mkenums)
 
 # --------------------------------------------------------------------
 # Manual pages
 
 AC_ARG_ENABLE(manpages,
-              AC_HELP_STRING([--disable-man-pages], [Build manual pages]))
+              AC_HELP_STRING([--disable-manpages], [Build manual pages]))
 if test "$enable_manpages" != "no"; then
 	enable_manpages="yes"
 	AC_PATH_PROG([XSLTPROC], [xsltproc])
@@ -88,9 +110,7 @@ AM_CONDITIONAL(WITH_MANPAGES, test x$enable_manpages = xyes)
 # --------------------------------------------------------------------
 # Vala
 
-VALA_REQUIRED=0.17.2.12
-
-VAPIGEN_CHECK($VALA_REQUIRED)
+VAPIGEN_CHECK($VALA_WANT)
 
 if test "$enable_vala" != "no"; then
 	AC_PATH_PROG([VALAC], [valac], [])
@@ -100,7 +120,6 @@ AM_CONDITIONAL(HAVE_VALAC, test "x$VALAC" != "x")
 # --------------------------------------------------------------------
 # libgcrypt
 
-GCRYPT_VERSION=1.2.2
 GCRYPT_LIBVER=1
 
 AC_ARG_ENABLE(gcrypt,
@@ -112,7 +131,7 @@ if test "$enable_gcrypt" != "no"; then
 
 	have_gcrypt="no"
 	m4_ifdef([AM_PATH_LIBGCRYPT],
-	         [AM_PATH_LIBGCRYPT($GCRYPT_LIBVER:$GCRYPT_VERSION, have_gcrypt=yes)])
+	         [AM_PATH_LIBGCRYPT($GCRYPT_LIBVER:$GCRYPT_WANT, have_gcrypt=yes)])
 
 	if test $have_gcrypt != "yes"; then
 		AC_MSG_ERROR([[
@@ -124,13 +143,13 @@ if test "$enable_gcrypt" != "no"; then
 	fi
 
 	AC_DEFINE(WITH_GCRYPT, 1, [Build with libgcypt and transport encryption])
-	AC_DEFINE_UNQUOTED(LIBGCRYPT_VERSION, "$GCRYPT_VERSION",
+	AC_DEFINE_UNQUOTED(LIBGCRYPT_VERSION, "$GCRYPT_WANT",
 	                   [Version of GCRYPT we expect])
 
 	AC_SUBST([LIBGCRYPT_CFLAGS])
 	AC_SUBST([LIBGCRYPT_LIBS])
 
-	gcrypt_status=$GCRYPT_VERSION
+	gcrypt_status="yes"
 	enable_gcrypt="yes"
 else
 	gcrypt_status="no"
@@ -169,11 +188,7 @@ AC_ARG_ENABLE(strict, [
 AC_MSG_CHECKING([build strict])
 
 if test "$enable_strict" = "yes"; then
-	CFLAGS="$CFLAGS -Werror \
-		-DGTK_DISABLE_DEPRECATED \
-		-DGDK_DISABLE_DEPRECATED \
-		-DG_DISABLE_DEPRECATED \
-		-DGDK_PIXBUF_DISABLE_DEPRECATED"
+	CFLAGS="$CFLAGS -Werror -DG_DISABLE_DEPRECATED"
 	INTROSPECTION_FLAGS="--warn-error"
 	TEST_MODE="thorough"
 else
@@ -258,22 +273,13 @@ AC_SUBST(SECRET_MINOR)
 
 AC_CONFIG_FILES([
 	Makefile
-	build/Makefile
-	docs/Makefile
-	docs/man/Makefile
-	docs/reference/Makefile
 	docs/reference/libsecret/Makefile
 	docs/reference/libsecret/version.xml
 	docs/reference/libsecret/version-major.xml
-	egg/Makefile
-	egg/tests/Makefile
 	po/Makefile.in
 	po/Makefile
-	libsecret/Makefile
 	libsecret/libsecret.pc
 	libsecret/libsecret-unstable.pc
-	libsecret/tests/Makefile
-	tool/Makefile
 ])
 AC_OUTPUT
 

@@ -342,7 +342,7 @@ secret_service_search (SecretService *service,
  *
  * Complete asynchronous operation to search for items.
  *
- * Returns: (transfer full) (element-type SecretUnstable.Item):
+ * Returns: (transfer full) (element-type Secret.Item):
  *          a list of items that matched the search
  */
 GList *
@@ -354,15 +354,15 @@ secret_service_search_finish (SecretService *service,
 	SearchClosure *closure;
 	GList *items = NULL;
 
-	g_return_val_if_fail (service == NULL || SECRET_IS_SERVICE (service), FALSE);
-	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+	g_return_val_if_fail (service == NULL || SECRET_IS_SERVICE (service), NULL);
+	g_return_val_if_fail (error == NULL || *error == NULL, NULL);
 	g_return_val_if_fail (g_simple_async_result_is_valid (result, G_OBJECT (service),
-	                      secret_service_search), FALSE);
+	                      secret_service_search), NULL);
 
 	res = G_SIMPLE_ASYNC_RESULT (result);
 
 	if (_secret_util_propagate_error (res, error))
-		return FALSE;
+		return NULL;
 
 	closure = g_simple_async_result_get_op_res_gpointer (res);
 	if (closure->unlocked)
@@ -432,7 +432,7 @@ service_load_items_sync (SecretService *service,
  * This function may block indefinetely. Use the asynchronous version
  * in user interface threads.
  *
- * Returns: (transfer full) (element-type SecretUnstable.Item):
+ * Returns: (transfer full) (element-type Secret.Item):
  *          a list of items that matched the search
  */
 GList *
@@ -1742,7 +1742,7 @@ secret_service_clear (SecretService *service,
  * Finish asynchronous operation to remove items from the secret
  * service.
  *
- * Returns: whether the removal was successful or not
+ * Returns: whether items were removed or not
  */
 gboolean
 secret_service_clear_finish (SecretService *service,
@@ -1783,7 +1783,7 @@ secret_service_clear_finish (SecretService *service,
  * This method may block indefinitely and should not be used in user interface
  * threads.
  *
- * Returns: whether the removal was successful or not
+ * Returns: whether items were removed or not
  */
 gboolean
 secret_service_clear_sync (SecretService *service,

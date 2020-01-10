@@ -8,8 +8,8 @@
 #define SECRET_COMPILATION
 #endif
 
-#include "secret-collection.h"
-/* enumerations from "secret-collection.h" */
+#include "../libsecret/secret-collection.h"
+/* enumerations from "../libsecret/secret-collection.h" */
 GType secret_collection_flags_get_type (void) G_GNUC_CONST;
 
 GType
@@ -34,17 +34,17 @@ secret_collection_create_flags_get_type (void)
 {
     static GType etype = 0;
     if (G_UNLIKELY(etype == 0)) {
-        static const GEnumValue values[] = {
+        static const GFlagsValue values[] = {
             { SECRET_COLLECTION_CREATE_NONE, "SECRET_COLLECTION_CREATE_NONE", "none" },
             { 0, NULL, NULL }
         };
-        etype = g_enum_register_static (g_intern_static_string ("SecretCollectionCreateFlags"), values);
+        etype = g_flags_register_static (g_intern_static_string ("SecretCollectionCreateFlags"), values);
     }
     return etype;
 }
 
-#include "secret-item.h"
-/* enumerations from "secret-item.h" */
+#include "../libsecret/secret-item.h"
+/* enumerations from "../libsecret/secret-item.h" */
 GType secret_item_flags_get_type (void) G_GNUC_CONST;
 
 GType
@@ -79,8 +79,8 @@ secret_item_create_flags_get_type (void)
     return etype;
 }
 
-#include "secret-schema.h"
-/* enumerations from "secret-schema.h" */
+#include "../libsecret/secret-schema.h"
+/* enumerations from "../libsecret/secret-schema.h" */
 GType secret_schema_attribute_type_get_type (void) G_GNUC_CONST;
 
 GType
@@ -116,8 +116,8 @@ secret_schema_flags_get_type (void)
     return etype;
 }
 
-#include "secret-service.h"
-/* enumerations from "secret-service.h" */
+#include "../libsecret/secret-service.h"
+/* enumerations from "../libsecret/secret-service.h" */
 GType secret_service_flags_get_type (void) G_GNUC_CONST;
 
 GType
@@ -155,8 +155,8 @@ secret_search_flags_get_type (void)
     return etype;
 }
 
-#include "secret-types.h"
-/* enumerations from "secret-types.h" */
+#include "../libsecret/secret-types.h"
+/* enumerations from "../libsecret/secret-types.h" */
 GType secret_error_get_type (void) G_GNUC_CONST;
 
 GType

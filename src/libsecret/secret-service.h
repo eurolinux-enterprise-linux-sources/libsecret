@@ -75,20 +75,28 @@ struct _SecretServiceClass {
 
 	void        (* prompt_async)     (SecretService *self,
 	                                  SecretPrompt *prompt,
+	                                  const GVariantType *return_type,
 	                                  GCancellable *cancellable,
 	                                  GAsyncReadyCallback callback,
 	                                  gpointer user_data);
 
 	GVariant *  (* prompt_finish)    (SecretService *self,
 	                                  GAsyncResult *result,
-	                                  const GVariantType *return_type,
 	                                  GError **error);
 
+	GType       (* get_collection_gtype)  (SecretService *self);
+
+	GType       (* get_item_gtype)        (SecretService *self);
+
 	/*< private >*/
-	gpointer padding[16];
+	gpointer padding[14];
 };
 
 GType                secret_service_get_type                      (void) G_GNUC_CONST;
+
+GType                secret_service_get_collection_gtype          (SecretService *self);
+
+GType                secret_service_get_item_gtype                (SecretService *self);
 
 void                 secret_service_get                           (SecretServiceFlags flags,
                                                                    GCancellable *cancellable,
@@ -104,17 +112,17 @@ SecretService *      secret_service_get_sync                      (SecretService
 
 void                 secret_service_disconnect                    (void);
 
-void                 secret_service_new                           (GType service_gtype,
+void                 secret_service_open                          (GType service_gtype,
                                                                    const gchar *service_bus_name,
                                                                    SecretServiceFlags flags,
                                                                    GCancellable *cancellable,
                                                                    GAsyncReadyCallback callback,
                                                                    gpointer user_data);
 
-SecretService *      secret_service_new_finish                    (GAsyncResult *result,
+SecretService *      secret_service_open_finish                   (GAsyncResult *result,
                                                                    GError **error);
 
-SecretService *      secret_service_new_sync                      (GType service_gtype,
+SecretService *      secret_service_open_sync                     (GType service_gtype,
                                                                    const gchar *service_bus_name,
                                                                    SecretServiceFlags flags,
                                                                    GCancellable *cancellable,
@@ -160,13 +168,13 @@ GVariant *           secret_service_prompt_sync                   (SecretService
 
 void                 secret_service_prompt                        (SecretService *self,
                                                                    SecretPrompt *prompt,
+                                                                   const GVariantType *return_type,
                                                                    GCancellable *cancellable,
                                                                    GAsyncReadyCallback callback,
                                                                    gpointer user_data);
 
 GVariant *           secret_service_prompt_finish                 (SecretService *self,
                                                                    GAsyncResult *result,
-                                                                   const GVariantType *return_type,
                                                                    GError **error);
 
 void                 secret_service_search                        (SecretService *service,

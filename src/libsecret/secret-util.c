@@ -32,6 +32,13 @@
  */
 
 /**
+ * SECRET_ERROR:
+ *
+ * The error domain quark which denotes libsecret specific errors from the
+ * #SecretError enumeration.
+ */
+
+/**
  * SecretError:
  * @SECRET_ERROR_PROTOCOL: received an invalid data or message from the Secret
  *                         Service
@@ -440,6 +447,8 @@ void
 _secret_sync_free (gpointer data)
 {
 	SecretSync *sync = data;
+
+	while (g_main_context_iteration (sync->context, FALSE));
 
 	g_clear_object (&sync->result);
 	g_main_loop_unref (sync->loop);

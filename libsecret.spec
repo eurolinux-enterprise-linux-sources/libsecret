@@ -2,13 +2,15 @@
 %global release_version %%(echo %{version} | awk -F. '{print $1"."$2}')
 
 Name:           libsecret
-Version:        0.15
-Release:        3%{?dist}
+Version:        0.18.2
+Release:        2%{?dist}
 Summary:        Library for storing and retrieving passwords and other secrets
 
 License:        LGPLv2+
 URL:            https://live.gnome.org/Libsecret
 Source0:        http://download.gnome.org/sources/libsecret/%{release_version}/libsecret-%{version}.tar.xz
+# https://bugzilla.redhat.com/show_bug.cgi?id=1142140
+Patch0:         libsecret-0.18-update-valgrind.h-and-memcheck.h.patch
 
 BuildRequires:  glib2-devel
 BuildRequires:  gobject-introspection-devel
@@ -39,6 +41,7 @@ developing applications that use %{name}.
 
 %prep
 %setup -q
+%patch0 -p1
 
 
 %build
@@ -64,7 +67,6 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 %{_bindir}/secret-tool
 %{_libdir}/libsecret-1.so.*
 %{_libdir}/girepository-1.0/Secret-1.typelib
-%{_libdir}/girepository-1.0/SecretUnstable-0.typelib
 %doc %{_mandir}/man1/secret-tool.1.gz
 
 %files devel
@@ -73,16 +75,19 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 %{_libdir}/pkgconfig/libsecret-1.pc
 %{_libdir}/pkgconfig/libsecret-unstable.pc
 %{_datadir}/gir-1.0/Secret-1.gir
-%{_datadir}/gir-1.0/SecretUnstable-0.gir
 %{_datadir}/vala/vapi/libsecret-1.deps
 %{_datadir}/vala/vapi/libsecret-1.vapi
-%{_datadir}/vala/vapi/libsecret-unstable.deps
-%{_datadir}/vala/vapi/libsecret-unstable.vapi
-%{_datadir}/vala/vapi/mock-service-0.vapi
 %doc %{_datadir}/gtk-doc/
 
 
 %changelog
+* Mon May 18 2015 David King <dking@redhat.com> - 0.18.2-2
+- Update valgrind.h and memcheck.h (#1142140)
+
+* Thu Apr 30 2015 Richard Hughes <rhughes@redhat.com> - 0.18.2-1
+- Update to 0.18.2
+- Resolves: #1174539
+
 * Fri Jan 24 2014 Daniel Mach <dmach@redhat.com> - 0.15-3
 - Mass rebuild 2014-01-24
 

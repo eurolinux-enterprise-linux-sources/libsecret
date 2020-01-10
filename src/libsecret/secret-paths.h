@@ -176,13 +176,13 @@ GVariant *          secret_service_prompt_at_dbus_path_sync            (SecretSe
 
 void                secret_service_prompt_at_dbus_path                 (SecretService *self,
                                                                         const gchar *prompt_path,
+                                                                        const GVariantType *return_type,
                                                                         GCancellable *cancellable,
                                                                         GAsyncReadyCallback callback,
                                                                         gpointer user_data);
 
 GVariant *          secret_service_prompt_at_dbus_path_finish          (SecretService *self,
                                                                         GAsyncResult *result,
-                                                                        const GVariantType *return_type,
                                                                         GError **error);
 
 void                secret_service_delete_item_dbus_path               (SecretService *self,
@@ -271,6 +271,12 @@ gboolean            secret_service_set_alias_to_dbus_path_sync         (SecretSe
                                                                         const gchar *collection_path,
                                                                         GCancellable *cancellable,
                                                                         GError **error);
+
+GVariant *          secret_service_encode_dbus_secret                  (SecretService *service,
+                                                                        SecretValue *value);
+
+SecretValue *       secret_service_decode_dbus_secret                  (SecretService *service,
+                                                                        GVariant *value);
 
 G_END_DECLS
 

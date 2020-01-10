@@ -38,11 +38,10 @@
  * #SecretValue is reference counted and immutable. The secret data is only
  * freed when all references have been released via secret_value_unref().
  *
- * These functions have an unstable API and may change across versions. Use
- * <literal>libsecret-unstable</literal> package to access them.
- *
- * Stability: Unstable
+ * Stability: Stable
  */
+
+static gboolean     is_password_value    (SecretValue *value);
 
 /**
  * SecretValue:
@@ -170,6 +169,26 @@ secret_value_get (SecretValue *value,
 }
 
 /**
+ * secret_value_get_text:
+ * @value: the value
+ *
+ * Get the secret data in the #SecretValue if it contains a textual
+ * value. The content type must be <literal>text/plain</literal>.
+ *
+ * Returns: (allow-none): the content type
+ */
+const gchar *
+secret_value_get_text (SecretValue *value)
+{
+	g_return_val_if_fail (value, NULL);
+
+	if (!is_password_value (value))
+		return NULL;
+
+	return value->secret;
+}
+
+/**
  * secret_value_get_content_type:
  * @value: the value
  *
@@ -204,7 +223,7 @@ secret_value_ref (SecretValue *value)
 
 /**
  * secret_value_unref:
- * @value: (type SecretUnstable.Value) (allow-none): value to unreference
+ * @value: (type Secret.Value) (allow-none): value to unreference
  *
  * Unreference a #SecretValue. When the last reference is gone, then
  * the value will be freed.
