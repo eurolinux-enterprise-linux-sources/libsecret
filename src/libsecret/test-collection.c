@@ -150,6 +150,7 @@ test_new_sync_noexist (Test *test,
 	                                                       SECRET_COLLECTION_NONE, NULL, &error);
 	g_assert_error (error, G_DBUS_ERROR, G_DBUS_ERROR_UNKNOWN_METHOD);
 	g_assert (collection == NULL);
+	g_clear_error (&error);
 }
 
 static void
@@ -170,6 +171,7 @@ test_new_async_noexist (Test *test,
 	collection = secret_collection_new_for_dbus_path_finish (result, &error);
 	g_assert_error (error, G_DBUS_ERROR, G_DBUS_ERROR_UNKNOWN_METHOD);
 	g_assert (collection == NULL);
+	g_clear_error (&error);
 	g_object_unref (result);
 }
 
@@ -289,6 +291,7 @@ test_for_alias_load_async (Test *test,
 	result = NULL;
 }
 
+#define g_assert_cmpstr_free(str1, op, str2) G_STMT_START { char *str = str1; g_assert_cmpstr (str, op, str2); g_free (str); } G_STMT_END
 static void
 test_create_sync (Test *test,
                   gconstpointer unused)
@@ -302,7 +305,7 @@ test_create_sync (Test *test,
 	g_object_add_weak_pointer (G_OBJECT (collection), (gpointer *)&collection);
 
 	g_assert (g_str_has_prefix (g_dbus_proxy_get_object_path (G_DBUS_PROXY (collection)), "/org/freedesktop/secrets/collection"));
-	g_assert_cmpstr (secret_collection_get_label (collection), ==, "Train");
+	g_assert_cmpstr_free (secret_collection_get_label (collection), ==, "Train");
 	g_assert (secret_collection_get_locked (collection) == FALSE);
 
 	g_object_unref (collection);
@@ -330,7 +333,7 @@ test_create_async (Test *test,
 	g_object_add_weak_pointer (G_OBJECT (collection), (gpointer *)&collection);
 
 	g_assert (g_str_has_prefix (g_dbus_proxy_get_object_path (G_DBUS_PROXY (collection)), "/org/freedesktop/secrets/collection"));
-	g_assert_cmpstr (secret_collection_get_label (collection), ==, "Train");
+	g_assert_cmpstr_free (secret_collection_get_label (collection), ==, "Train");
 	g_assert (secret_collection_get_locked (collection) == FALSE);
 
 	g_object_unref (collection);
@@ -624,6 +627,7 @@ test_delete_sync (Test *test,
 	                                                       SECRET_COLLECTION_NONE, NULL, &error);
 	g_assert_error (error, G_DBUS_ERROR, G_DBUS_ERROR_UNKNOWN_METHOD);
 	g_assert (collection == NULL);
+	g_clear_error (&error);
 }
 
 static void
@@ -656,6 +660,7 @@ test_delete_async (Test *test,
 	                                                       SECRET_COLLECTION_NONE, NULL, &error);
 	g_assert_error (error, G_DBUS_ERROR, G_DBUS_ERROR_UNKNOWN_METHOD);
 	g_assert (collection == NULL);
+	g_clear_error(&error);
 }
 
 static void

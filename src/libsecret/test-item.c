@@ -121,6 +121,7 @@ test_new_sync_noexist (Test *test,
 	item = secret_item_new_for_dbus_path_sync (test->service, item_path, SECRET_ITEM_NONE, NULL, &error);
 	g_assert_error (error, G_DBUS_ERROR, G_DBUS_ERROR_UNKNOWN_METHOD);
 	g_assert (item == NULL);
+	g_clear_error (&error);
 }
 
 static void
@@ -165,8 +166,11 @@ test_new_async_noexist (Test *test,
 	item = secret_item_new_for_dbus_path_finish (result, &error);
 	g_assert_error (error, G_DBUS_ERROR, G_DBUS_ERROR_UNKNOWN_METHOD);
 	g_assert (item == NULL);
+	g_clear_error (&error);
 	g_object_unref (result);
 }
+
+#define g_assert_cmpstr_free(str1, op, str2) G_STMT_START { char *str = str1; g_assert_cmpstr (str, op, str2); g_free (str); } G_STMT_END
 
 static void
 test_create_sync (Test *test,
@@ -200,7 +204,7 @@ test_create_sync (Test *test,
 	secret_value_unref (value);
 
 	g_assert (g_str_has_prefix (g_dbus_proxy_get_object_path (G_DBUS_PROXY (item)), collection_path));
-	g_assert_cmpstr (secret_item_get_label (item), ==, "Tunnel");
+	g_assert_cmpstr_free (secret_item_get_label (item), ==, "Tunnel");
 	g_assert (secret_item_get_locked (item) == FALSE);
 
 	g_object_unref (item);
@@ -246,7 +250,7 @@ test_create_async (Test *test,
 	g_object_add_weak_pointer (G_OBJECT (item), (gpointer *)&item);
 
 	g_assert (g_str_has_prefix (g_dbus_proxy_get_object_path (G_DBUS_PROXY (item)), collection_path));
-	g_assert_cmpstr (secret_item_get_label (item), ==, "Tunnel");
+	g_assert_cmpstr_free (secret_item_get_label (item), ==, "Tunnel");
 	g_assert (secret_item_get_locked (item) == FALSE);
 
 	g_object_unref (item);
@@ -495,6 +499,7 @@ test_set_attributes_async (Test *test,
 	g_hash_table_insert (attributes, "number", "5");
 	secret_item_set_attributes (item, &MOCK_SCHEMA, attributes, NULL, on_async_result, &result);
 	g_assert (result == NULL);
+	g_hash_table_unref (attributes);
 
 	egg_test_wait ();
 
@@ -815,6 +820,7 @@ test_delete_sync (Test *test,
 	item = secret_item_new_for_dbus_path_sync (test->service, item_path, SECRET_ITEM_NONE, NULL, &error);
 	g_assert_error (error, G_DBUS_ERROR, G_DBUS_ERROR_UNKNOWN_METHOD);
 	g_assert (item == NULL);
+	g_clear_error (&error);
 }
 
 static void
@@ -845,6 +851,7 @@ test_delete_async (Test *test,
 	item = secret_item_new_for_dbus_path_sync (test->service, item_path, SECRET_ITEM_NONE, NULL, &error);
 	g_assert_error (error, G_DBUS_ERROR, G_DBUS_ERROR_UNKNOWN_METHOD);
 	g_assert (item == NULL);
+	g_clear_error (&error);
 }
 
 int

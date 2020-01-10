@@ -1,6 +1,6 @@
 AC_PREREQ(2.63)
 
-AC_INIT([libsecret],[0.18.2],
+AC_INIT([libsecret],[0.18.5],
         [http://bugzilla.gnome.org/enter_bug.cgi?product=libsecret],
         [libsecret])
 
@@ -275,7 +275,6 @@ AC_CONFIG_FILES([
 	Makefile
 	docs/reference/libsecret/Makefile
 	docs/reference/libsecret/version.xml
-	docs/reference/libsecret/version-major.xml
 	po/Makefile.in
 	po/Makefile
 	libsecret/libsecret.pc

@@ -18,11 +18,9 @@
 #	system libcryptopp.
 
 import hashlib, hmac
-import math
-from binascii import a2b_hex, b2a_hex
 
 class HKDF(object):
-    def __init__(self, ikm, L, salt=None, info="", digestmod = None):
+    def __init__(self, ikm, L, salt=None, info=None, digestmod = None):
         self.ikm = ikm
         self.keylen = L
 
@@ -36,11 +34,11 @@ class HKDF(object):
         self.hashlen = len(self.digest_cons().digest())
 
         if salt is None:
-            self.salt = chr(0)*(self.hashlen)
+            self.salt = b'\x00' * (self.hashlen)
         else:
             self.salt = salt
 
-        self.info = info
+        self.info = info or b''
 
     #extract PRK
     def extract(self):
@@ -50,23 +48,13 @@ class HKDF(object):
 
     #expand PRK
     def expand(self):
-        N = math.ceil(float(self.keylen)/self.hashlen)
-        T = ""
-        temp = ""
+        T = b""
+        temp = b""
         i=0x01
-        '''while len(T)<2*self.keylen :
-            msg = temp
-            msg += self.info
-            msg += b2a_hex(chr(i))
-            h = hmac.new(self.prk, a2b_hex(msg), self.digest_cons)
-            temp = b2a_hex(h.digest())
-            i += 1
-            T += temp
-       '''
         while len(T)<self.keylen :
             msg = temp
             msg += self.info
-            msg += chr(i)
+            msg += bytes((i,))
             h = hmac.new(self.prk, msg, self.digest_cons)
             temp = h.digest()
             i += 1
@@ -80,5 +68,5 @@ def new(ikm, L, salt=None, info="", digestmod = None):
 
 def hkdf(ikm, length, salt=None, info=""):
 	hk = HKDF(ikm, length ,salt,info)
-	computedprk = hk.extract()
+	hk.extract()
 	return hk.expand()

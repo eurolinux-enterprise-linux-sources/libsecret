@@ -1,26 +1,33 @@
 # first two digits of version
 %global release_version %%(echo %{version} | awk -F. '{print $1"."$2}')
 
+%ifarch %{ix86} x86_64 ppc ppc64 ppc64le s390x armv7hl aarch64
+%global has_valgrind 1
+%endif
+
 Name:           libsecret
-Version:        0.18.2
+Version:        0.18.5
 Release:        2%{?dist}
 Summary:        Library for storing and retrieving passwords and other secrets
 
 License:        LGPLv2+
-URL:            https://live.gnome.org/Libsecret
+URL:            https://wiki.gnome.org/Projects/Libsecret
 Source0:        http://download.gnome.org/sources/libsecret/%{release_version}/libsecret-%{version}.tar.xz
-# https://bugzilla.redhat.com/show_bug.cgi?id=1142140
-Patch0:         libsecret-0.18-update-valgrind.h-and-memcheck.h.patch
+# https://bugzilla.redhat.com/show_bug.cgi?id=1434474
+Patch0:         libsecret-0.18.5-fix-invalid-secret-transfer-error.patch
 
 BuildRequires:  glib2-devel
 BuildRequires:  gobject-introspection-devel
 BuildRequires:  intltool
 BuildRequires:  libgcrypt-devel >= 1.2.2
 BuildRequires:  vala-devel >= 0.17.2.12
-BuildRequires:  vala-tools
+BuildRequires:  vala
 BuildRequires:  gtk-doc
 BuildRequires:  libxslt-devel
 BuildRequires:  docbook-style-xsl
+%if 0%{?has_valgrind}
+BuildRequires:  valgrind-devel
+%endif
 
 Provides:       bundled(egglib)
 
@@ -43,6 +50,11 @@ developing applications that use %{name}.
 %setup -q
 %patch0 -p1
 
+# Use system valgrind headers instead
+%if 0%{?has_valgrind}
+rm -rf build/valgrind/
+%endif
+
 
 %build
 %configure --disable-static
@@ -50,7 +62,7 @@ make %{?_smp_mflags}
 
 
 %install
-make install DESTDIR=$RPM_BUILD_ROOT
+%make_install
 
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
@@ -63,7 +75,8 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
 
 %files -f libsecret.lang
-%doc AUTHORS COPYING NEWS README
+%license COPYING
+%doc AUTHORS NEWS README
 %{_bindir}/secret-tool
 %{_libdir}/libsecret-1.so.*
 %{_libdir}/girepository-1.0/Secret-1.typelib
@@ -81,6 +94,13 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
 
 %changelog
+* Tue Mar 21 2017 David King <dking@redhat.com> - 0.18.5-2
+- Fix invalid secret transfer error (#1434474)
+
+* Fri Mar 25 2016 Kalev Lember <klember@redhat.com> - 0.18.5-1
+- Update to 0.18.5
+- Resolves: #1387018
+
 * Mon May 18 2015 David King <dking@redhat.com> - 0.18.2-2
 - Update valgrind.h and memcheck.h (#1142140)
 

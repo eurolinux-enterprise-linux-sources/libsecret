@@ -1,4 +1,4 @@
-<ONLINE href="http://developer.gnome.org/libsecret/stable/">
+<ONLINE href="https://developer.gnome.org/libsecret/unstable/">
 <ANCHOR id="libsecret-Password-storage" href="libsecret/libsecret-Password-storage.html">
 <ANCHOR id="libsecret-Password-storage.functions" href="libsecret/libsecret-Password-storage.html#libsecret-Password-storage.functions">
 <ANCHOR id="libsecret-Password-storage.other" href="libsecret/libsecret-Password-storage.html#libsecret-Password-storage.other">
@@ -43,8 +43,13 @@
 <ANCHOR id="SECRET-SCHEMA-COMPAT-NETWORK:CAPS" href="libsecret/libsecret-SecretSchema.html#SECRET-SCHEMA-COMPAT-NETWORK:CAPS">
 <ANCHOR id="SecretSchema" href="libsecret/libsecret-SecretSchema.html#SecretSchema">
 <ANCHOR id="SecretSchemaFlags" href="libsecret/libsecret-SecretSchema.html#SecretSchemaFlags">
+<ANCHOR id="SECRET-SCHEMA-NONE:CAPS" href="libsecret/libsecret-SecretSchema.html#SECRET-SCHEMA-NONE:CAPS">
+<ANCHOR id="SECRET-SCHEMA-DONT-MATCH-NAME:CAPS" href="libsecret/libsecret-SecretSchema.html#SECRET-SCHEMA-DONT-MATCH-NAME:CAPS">
 <ANCHOR id="SecretSchemaAttribute" href="libsecret/libsecret-SecretSchema.html#SecretSchemaAttribute">
 <ANCHOR id="SecretSchemaAttributeType" href="libsecret/libsecret-SecretSchema.html#SecretSchemaAttributeType">
+<ANCHOR id="SECRET-SCHEMA-ATTRIBUTE-STRING:CAPS" href="libsecret/libsecret-SecretSchema.html#SECRET-SCHEMA-ATTRIBUTE-STRING:CAPS">
+<ANCHOR id="SECRET-SCHEMA-ATTRIBUTE-INTEGER:CAPS" href="libsecret/libsecret-SecretSchema.html#SECRET-SCHEMA-ATTRIBUTE-INTEGER:CAPS">
+<ANCHOR id="SECRET-SCHEMA-ATTRIBUTE-BOOLEAN:CAPS" href="libsecret/libsecret-SecretSchema.html#SECRET-SCHEMA-ATTRIBUTE-BOOLEAN:CAPS">
 <ANCHOR id="SecretService" href="libsecret/SecretService.html">
 <ANCHOR id="SecretService.functions" href="libsecret/SecretService.html#SecretService.functions">
 <ANCHOR id="SecretService.properties" href="libsecret/SecretService.html#SecretService.properties">
@@ -100,7 +105,14 @@
 <ANCHOR id="SecretService-struct" href="libsecret/SecretService.html#SecretService-struct">
 <ANCHOR id="SecretServiceClass" href="libsecret/SecretService.html#SecretServiceClass">
 <ANCHOR id="SecretServiceFlags" href="libsecret/SecretService.html#SecretServiceFlags">
+<ANCHOR id="SECRET-SERVICE-NONE:CAPS" href="libsecret/SecretService.html#SECRET-SERVICE-NONE:CAPS">
+<ANCHOR id="SECRET-SERVICE-OPEN-SESSION:CAPS" href="libsecret/SecretService.html#SECRET-SERVICE-OPEN-SESSION:CAPS">
+<ANCHOR id="SECRET-SERVICE-LOAD-COLLECTIONS:CAPS" href="libsecret/SecretService.html#SECRET-SERVICE-LOAD-COLLECTIONS:CAPS">
 <ANCHOR id="SecretSearchFlags" href="libsecret/SecretService.html#SecretSearchFlags">
+<ANCHOR id="SECRET-SEARCH-NONE:CAPS" href="libsecret/SecretService.html#SECRET-SEARCH-NONE:CAPS">
+<ANCHOR id="SECRET-SEARCH-ALL:CAPS" href="libsecret/SecretService.html#SECRET-SEARCH-ALL:CAPS">
+<ANCHOR id="SECRET-SEARCH-UNLOCK:CAPS" href="libsecret/SecretService.html#SECRET-SEARCH-UNLOCK:CAPS">
+<ANCHOR id="SECRET-SEARCH-LOAD-SECRETS:CAPS" href="libsecret/SecretService.html#SECRET-SEARCH-LOAD-SECRETS:CAPS">
 <ANCHOR id="SecretService.property-details" href="libsecret/SecretService.html#SecretService.property-details">
 <ANCHOR id="SecretService--collections" href="libsecret/SecretService.html#SecretService--collections">
 <ANCHOR id="SecretService--flags" href="libsecret/SecretService.html#SecretService--flags">
@@ -143,6 +155,8 @@
 <ANCHOR id="SecretCollection-struct" href="libsecret/SecretCollection.html#SecretCollection-struct">
 <ANCHOR id="SecretCollectionClass" href="libsecret/SecretCollection.html#SecretCollectionClass">
 <ANCHOR id="SecretCollectionFlags" href="libsecret/SecretCollection.html#SecretCollectionFlags">
+<ANCHOR id="SECRET-COLLECTION-NONE:CAPS" href="libsecret/SecretCollection.html#SECRET-COLLECTION-NONE:CAPS">
+<ANCHOR id="SECRET-COLLECTION-LOAD-ITEMS:CAPS" href="libsecret/SecretCollection.html#SECRET-COLLECTION-LOAD-ITEMS:CAPS">
 <ANCHOR id="SecretCollection.property-details" href="libsecret/SecretCollection.html#SecretCollection.property-details">
 <ANCHOR id="SecretCollection--created" href="libsecret/SecretCollection.html#SecretCollection--created">
 <ANCHOR id="SecretCollection--flags" href="libsecret/SecretCollection.html#SecretCollection--flags">
@@ -195,7 +209,11 @@
 <ANCHOR id="SecretItem-struct" href="libsecret/SecretItem.html#SecretItem-struct">
 <ANCHOR id="SecretItemClass" href="libsecret/SecretItem.html#SecretItemClass">
 <ANCHOR id="SecretItemFlags" href="libsecret/SecretItem.html#SecretItemFlags">
+<ANCHOR id="SECRET-ITEM-NONE:CAPS" href="libsecret/SecretItem.html#SECRET-ITEM-NONE:CAPS">
+<ANCHOR id="SECRET-ITEM-LOAD-SECRET:CAPS" href="libsecret/SecretItem.html#SECRET-ITEM-LOAD-SECRET:CAPS">
 <ANCHOR id="SecretItemCreateFlags" href="libsecret/SecretItem.html#SecretItemCreateFlags">
+<ANCHOR id="SECRET-ITEM-CREATE-NONE:CAPS" href="libsecret/SecretItem.html#SECRET-ITEM-CREATE-NONE:CAPS">
+<ANCHOR id="SECRET-ITEM-CREATE-REPLACE:CAPS" href="libsecret/SecretItem.html#SECRET-ITEM-CREATE-REPLACE:CAPS">
 <ANCHOR id="SecretItem.property-details" href="libsecret/SecretItem.html#SecretItem.property-details">
 <ANCHOR id="SecretItem--attributes" href="libsecret/SecretItem.html#SecretItem--attributes">
 <ANCHOR id="SecretItem--created" href="libsecret/SecretItem.html#SecretItem--created">
@@ -253,6 +271,10 @@
 <ANCHOR id="SECRET-ERROR:CAPS" href="libsecret/libsecret-SecretError.html#SECRET-ERROR:CAPS">
 <ANCHOR id="libsecret-SecretError.other_details" href="libsecret/libsecret-SecretError.html#libsecret-SecretError.other_details">
 <ANCHOR id="SecretError" href="libsecret/libsecret-SecretError.html#SecretError">
+<ANCHOR id="SECRET-ERROR-PROTOCOL:CAPS" href="libsecret/libsecret-SecretError.html#SECRET-ERROR-PROTOCOL:CAPS">
+<ANCHOR id="SECRET-ERROR-IS-LOCKED:CAPS" href="libsecret/libsecret-SecretError.html#SECRET-ERROR-IS-LOCKED:CAPS">
+<ANCHOR id="SECRET-ERROR-NO-SUCH-OBJECT:CAPS" href="libsecret/libsecret-SecretError.html#SECRET-ERROR-NO-SUCH-OBJECT:CAPS">
+<ANCHOR id="SECRET-ERROR-ALREADY-EXISTS:CAPS" href="libsecret/libsecret-SecretError.html#SECRET-ERROR-ALREADY-EXISTS:CAPS">
 <ANCHOR id="libsecret-DBus-Path-Related-Functions" href="libsecret/libsecret-DBus-Path-Related-Functions.html">
 <ANCHOR id="libsecret-DBus-Path-Related-Functions.functions" href="libsecret/libsecret-DBus-Path-Related-Functions.html#libsecret-DBus-Path-Related-Functions.functions">
 <ANCHOR id="libsecret-DBus-Path-Related-Functions.includes" href="libsecret/libsecret-DBus-Path-Related-Functions.html#libsecret-DBus-Path-Related-Functions.includes">
@@ -308,6 +330,8 @@
 <ANCHOR id="annotation-glossterm-array" href="libsecret/annotation-glossary.html#annotation-glossterm-array">
 <ANCHOR id="annotation-glossterm-element-type" href="libsecret/annotation-glossary.html#annotation-glossterm-element-type">
 <ANCHOR id="annotation-glossterm-out" href="libsecret/annotation-glossary.html#annotation-glossterm-out">
+<ANCHOR id="annotation-glossterm-rename-to" href="libsecret/annotation-glossary.html#annotation-glossterm-rename-to">
+<ANCHOR id="annotation-glossterm-skip" href="libsecret/annotation-glossary.html#annotation-glossterm-skip">
 <ANCHOR id="annotation-glossterm-Stable" href="libsecret/annotation-glossary.html#annotation-glossterm-Stable">
 <ANCHOR id="annotation-glossterm-transfer floating" href="libsecret/annotation-glossary.html#annotation-glossterm-transfer floating">
 <ANCHOR id="annotation-glossterm-transfer full" href="libsecret/annotation-glossary.html#annotation-glossterm-transfer full">

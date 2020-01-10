@@ -1660,6 +1660,7 @@ collection_closure_free (gpointer data)
 	CollectionClosure *closure = data;
 	g_clear_object (&closure->cancellable);
 	g_clear_object (&closure->prompt);
+	g_free (closure->collection_path);
 	g_slice_free (CollectionClosure, closure);
 }
 
@@ -1929,6 +1930,7 @@ static void
 item_closure_free (gpointer data)
 {
 	ItemClosure *closure = data;
+	g_free (closure->item_path);
 	g_variant_unref (closure->properties);
 	secret_value_unref (closure->value);
 	g_clear_object (&closure->cancellable);

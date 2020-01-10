@@ -11,20 +11,18 @@
 # Licensed under the Apache License, Version 2.0
 # http://www.apache.org/licenses/
 #
-import os
-import sys
 import math
 
 def append_PKCS7_padding(s):
     """return s padded to a multiple of 16-bytes by PKCS7 padding"""
     numpads = 16 - (len(s)%16)
-    return s + numpads*chr(numpads)
+    return s + bytes([numpads] * numpads)
 
 def strip_PKCS7_padding(s):
     """return s stripped of PKCS7 padding"""
     if len(s)%16 or not s:
         raise ValueError("String of len %d can't be PCKS7-padded" % len(s))
-    numpads = ord(s[-1])
+    numpads = s[-1]
     if numpads > 16:
         raise ValueError("String ending with %r can't be PCKS7-padded" % s[-1])
     return s[:-numpads]
@@ -421,7 +419,7 @@ class AESModeOfOperation(object):
         while len(ar) < end - start:
             ar.append(0)
         while i < end:
-            ar[j] = ord(string[i])
+            ar[j] = string[i]
             j += 1
             i += 1
         return ar
@@ -523,7 +521,7 @@ class AESModeOfOperation(object):
         output = []
         plaintext = [0] * 16
         # the output plain text string
-        stringOut = ''
+        result = []
         # char firstRound
         firstRound = True
         if cipherIn != None:
@@ -549,7 +547,7 @@ class AESModeOfOperation(object):
                         else:
                             plaintext[i] = output[i] ^ ciphertext[i]
                     for k in range(end-start):
-                        stringOut += chr(plaintext[k])
+                        result.append(plaintext[k])
                     iput = ciphertext
                 elif mode == self.modeOfOperation["OFB"]:
                     if firstRound:
@@ -567,7 +565,7 @@ class AESModeOfOperation(object):
                         else:
                             plaintext[i] = output[i] ^ ciphertext[i]
                     for k in range(end-start):
-                        stringOut += chr(plaintext[k])
+                        result.append(plaintext[k])
                     iput = output
                 elif mode == self.modeOfOperation["CBC"]:
                     output = self.aes.decrypt(ciphertext, key, size)
@@ -579,69 +577,13 @@ class AESModeOfOperation(object):
                     firstRound = False
                     if originalsize is not None and originalsize < end:
                         for k in range(originalsize-start):
-                            stringOut += chr(plaintext[k])
+                            result.append(plaintext[k])
                     else:
                         for k in range(end-start):
-                            stringOut += chr(plaintext[k])
+                            result.append(plaintext[k])
                     iput = ciphertext
-        return stringOut
+        return bytes(result)
 
-
-def encryptData(key, data, mode=AESModeOfOperation.modeOfOperation["CBC"]):
-    """encrypt `data` using `key`
-
-    `key` should be a string of bytes.
-
-    returned cipher is a string of bytes prepended with the initialization
-    vector.
-
-    """
-    key = map(ord, key)
-    if mode == AESModeOfOperation.modeOfOperation["CBC"]:
-        data = append_PKCS7_padding(data)
-    keysize = len(key)
-    assert keysize in AES.keySize.values(), 'invalid key size: %s' % keysize
-    # create a new iv using random data
-    iv = [ord(i) for i in os.urandom(16)]
-    moo = AESModeOfOperation()
-    (mode, length, ciph) = moo.encrypt(data, mode, key, keysize, iv)
-    # With padding, the original length does not need to be known. It's a bad
-    # idea to store the original message length.
-    # prepend the iv.
-    return ''.join(map(chr, iv)) + ''.join(map(chr, ciph))
-
-def decryptData(key, data, mode=AESModeOfOperation.modeOfOperation["CBC"]):
-    """decrypt `data` using `key`
-
-    `key` should be a string of bytes.
-
-    `data` should have the initialization vector prepended as a string of
-    ordinal values.
-
-    """
-
-    key = map(ord, key)
-    keysize = len(key)
-    assert keysize in AES.keySize.values(), 'invalid key size: %s' % keysize
-    # iv is first 16 bytes
-    iv = map(ord, data[:16])
-    data = map(ord, data[16:])
-    moo = AESModeOfOperation()
-    decr = moo.decrypt(data, None, mode, key, keysize, iv)
-    if mode == AESModeOfOperation.modeOfOperation["CBC"]:
-        decr = strip_PKCS7_padding(decr)
-    return decr
-
-def generateRandomKey(keysize):
-    """Generates a key from random data of length `keysize`.
-
-    The returned key is a string of bytes.
-
-    """
-    if keysize not in (16, 24, 32):
-        emsg = 'Invalid keysize, %s. Should be one of (16, 24, 32).'
-        raise ValueError, emsg % keysize
-    return os.urandom(keysize)
 
 if __name__ == "__main__":
     moo = AESModeOfOperation()
@@ -650,7 +592,7 @@ if __name__ == "__main__":
     iv = [103,35,148,239,76,213,47,118,255,222,123,176,106,134,98,92]
     mode, orig_len, ciph = moo.encrypt(cleartext, moo.modeOfOperation["CBC"],
             cypherkey, moo.aes.keySize["SIZE_128"], iv)
-    print 'm=%s, ol=%s (%s), ciph=%s' % (mode, orig_len, len(cleartext), ciph)
+    print('m=%s, ol=%s (%s), ciph=%s' % (mode, orig_len, len(cleartext), ciph))
     decr = moo.decrypt(ciph, orig_len, mode, cypherkey,
             moo.aes.keySize["SIZE_128"], iv)
-    print decr
+    print(decr)

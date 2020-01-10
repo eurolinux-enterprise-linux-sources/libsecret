@@ -267,6 +267,9 @@ secret_item_finalize (GObject *obj)
 		g_object_remove_weak_pointer (G_OBJECT (self->pv->service),
 		                              (gpointer *)&self->pv->service);
 
+	if (self->pv->value != NULL)
+		secret_value_unref (self->pv->value);
+
 	g_mutex_clear (&self->pv->mutex);
 
 	G_OBJECT_CLASS (secret_item_parent_class)->finalize (obj);
@@ -687,7 +690,7 @@ on_create_item (GObject *source,
 	if (error != NULL)
 		g_simple_async_result_take_error (res, error);
 
-	/* As a convenince mark down the SecretValue on the item */
+	/* As a convenience mark down the SecretValue on the item */
 	_secret_item_set_cached_secret (closure->item, closure->value);
 
 	g_simple_async_result_complete (res);
@@ -714,6 +717,7 @@ on_create_path (GObject *source,
 		g_simple_async_result_take_error (res, error);
 		g_simple_async_result_complete (res);
 	}
+	g_free (path);
 
 	g_object_unref (res);
 }
@@ -1255,7 +1259,7 @@ secret_item_load_secret (SecretItem *self,
  * The newly loaded secret value can be accessed by calling
  * secret_item_get_secret().
  *
- * Returns: whether the secret item succesfully loaded or not
+ * Returns: whether the secret item successfully loaded or not
  */
 gboolean
 secret_item_load_secret_finish (SecretItem *self,
@@ -1288,7 +1292,7 @@ secret_item_load_secret_finish (SecretItem *self,
  * This function may block indefinetely. Use the asynchronous version
  * in user interface threads.
  *
- * Returns: whether the secret item succesfully loaded or not
+ * Returns: whether the secret item successfully loaded or not
  */
 gboolean
 secret_item_load_secret_sync (SecretItem *self,
@@ -1482,7 +1486,7 @@ secret_item_load_secrets (GList *items,
  *
  * Items that are locked will not have their secrets loaded.
  *
- * Returns: whether the operation succeded or not
+ * Returns: whether the operation succeeded or not
  */
 gboolean
 secret_item_load_secrets_finish (GAsyncResult *result,
@@ -1516,7 +1520,7 @@ secret_item_load_secrets_finish (GAsyncResult *result,
  *
  * Items that are locked will not have their secrets loaded.
  *
- * Returns: whether the operation succeded or not
+ * Returns: whether the operation succeeded or not
  */
 gboolean
 secret_item_load_secrets_sync (GList *items,
