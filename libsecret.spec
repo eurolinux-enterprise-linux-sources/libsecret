@@ -3,7 +3,7 @@
 
 Name:           libsecret
 Version:        0.15
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Library for storing and retrieving passwords and other secrets
 
 License:        LGPLv2+
@@ -83,6 +83,12 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
 
 %changelog
+* Fri Jan 24 2014 Daniel Mach <dmach@redhat.com> - 0.15-3
+- Mass rebuild 2014-01-24
+
+* Fri Dec 27 2013 Daniel Mach <dmach@redhat.com> - 0.15-2
+- Mass rebuild 2013-12-27
+
 * Wed Mar 20 2013 Kalev Lember <kalevlember@gmail.com> - 0.15-1
 - Update to 0.15
 
