@@ -89,8 +89,7 @@ temp-dbus-generated.c: $(DBUS_XML_DEFINITIONS) Makefile.am
 	$(AM_V_GEN) gdbus-codegen --interface-prefix org.freedesktop.Secret. \
 		--generate-c-code temp-dbus-generated --c-namespace SecretGen $<
 secret-dbus-generated.c: temp-dbus-generated.c Makefile.am
-	$(AM_V_GEN) sed -e '1i\
-	#define GLIB_DISABLE_DEPRECATION_WARNINGS' \
+	$(AM_V_GEN) sed -e $$'1i\\\n#define GLIB_DISABLE_DEPRECATION_WARNINGS' \
 		-e 's/secret_gen_/_secret_gen_/g' -e 's/type-/type/g' \
 		-e 's/temp-dbus-generated.h/secret-dbus-generated.h/g' \
 		temp-dbus-generated.c > secret-dbus-generated.c
@@ -263,6 +262,7 @@ VALA_TESTS_FLAGS = \
 	--Xcc=-I$(srcdir) \
 	--Xcc=-I$(builddir) \
 	--Xcc=-I$(srcdir)/libsecret \
+	-X -fPIC \
 	--vapidir=$(builddir) \
 	--pkg libsecret-@SECRET_MAJOR@ \
 	--pkg mock-service-0 \
@@ -282,7 +282,7 @@ SUFFIXES = .vala .vala.o
 test-vala-lang.vala.o: libsecret/test-vala-lang.vala $(VALA_TESTS_VAPIS)
 	$(VALA_V) $(VALAC) --compile $(VALA_TESTS_FLAGS) $<
 test-vala-unstable.vala.o: libsecret/test-vala-unstable.vala $(VALA_TESTS_VAPIS)
-	$(VALA_V) $(VALAC) --compile $(VALA_TESTS_FLAGS) $<
+	$(VALA_V) $(VALAC) --compile --Xcc=-DSECRET_WITH_UNSTABLE=1 $(VALA_TESTS_FLAGS) $<
 
 test_vala_lang_SOURCES =
 test_vala_lang_LDADD = \

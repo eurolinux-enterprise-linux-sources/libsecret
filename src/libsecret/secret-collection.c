@@ -1553,7 +1553,7 @@ collection_load_items_sync (SecretCollection *self,
  * If %SECRET_SEARCH_LOAD_SECRETS is set in @flags, then the items will have
  * their secret values loaded and available via secret_item_get_secret().
  *
- * This function may block indefinetely. Use the asynchronous version
+ * This function may block indefinitely. Use the asynchronous version
  * in user interface threads.
  *
  * Returns: (transfer full) (element-type Secret.Item):
@@ -1898,7 +1898,7 @@ secret_collection_set_label_finish (SecretCollection *self,
  *
  * Set the label of this collection.
  *
- * This function may block indefinetely. Use the asynchronous version
+ * This function may block indefinitely. Use the asynchronous version
  * in user interface threads.
  *
  * Returns: whether the change was successful or not
@@ -2220,31 +2220,26 @@ secret_collection_for_alias_sync (SecretService *service,
 
 	collection_path = secret_service_read_alias_dbus_path_sync (service, alias,
 	                                                            cancellable, error);
+	 /* No collection for this alias */
 	if (collection_path == NULL)
 		return NULL;
 
-	/* No collection for this alias */
-	if (collection_path == NULL) {
-		collection = NULL;
+	collection = _secret_service_find_collection_instance (service,
+	                                                       collection_path);
 
-	} else {
-		collection = _secret_service_find_collection_instance (service,
-		                                                       collection_path);
+	if (collection != NULL) {
 
-		if (collection != NULL) {
-
-			/* Have a collection with all necessary flags */
-			if (!collection_ensure_for_flags_sync (collection, flags,
-			                                       cancellable, error)) {
-				g_object_unref (collection);
-				collection = NULL;
-			}
-
-		/* No collection loaded, but valid path, load */
-		} else {
-			collection = secret_collection_new_for_dbus_path_sync (service, collection_path,
-			                                                       flags, cancellable, error);
+		/* Have a collection with all necessary flags */
+		if (!collection_ensure_for_flags_sync (collection, flags,
+		                                       cancellable, error)) {
+			g_object_unref (collection);
+			collection = NULL;
 		}
+
+	/* No collection loaded, but valid path, load */
+	} else {
+		collection = secret_collection_new_for_dbus_path_sync (service, collection_path,
+		                                                       flags, cancellable, error);
 	}
 
 	g_free (collection_path);

@@ -51,7 +51,7 @@ static void
 search_closure_free (gpointer data)
 {
 	SearchClosure *closure = data;
-	g_object_unref (closure->service);
+	g_clear_object (&closure->service);
 	g_clear_object (&closure->cancellable);
 	g_hash_table_unref (closure->items);
 	g_variant_unref (closure->attributes);
@@ -429,7 +429,7 @@ service_load_items_sync (SecretService *service,
  * are available via secret_item_get_secret(). If the load of a secret values
  * fail, then the
  *
- * This function may block indefinetely. Use the asynchronous version
+ * This function may block indefinitely. Use the asynchronous version
  * in user interface threads.
  *
  * Returns: (transfer full) (element-type Secret.Item):

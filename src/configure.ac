@@ -1,6 +1,6 @@
 AC_PREREQ(2.63)
 
-AC_INIT([libsecret],[0.18.5],
+AC_INIT([libsecret],[0.18.6],
         [http://bugzilla.gnome.org/enter_bug.cgi?product=libsecret],
         [libsecret])
 
@@ -46,7 +46,7 @@ SECRET_AGE=0
 
 AC_CONFIG_MACRO_DIR([build/m4])
 AC_CONFIG_AUX_DIR([build])
-AM_INIT_AUTOMAKE([1.11 tar-ustar foreign -Wno-portability subdir-objects])
+AM_INIT_AUTOMAKE([1.11 dist-xz no-dist-gzip tar-ustar foreign -Wno-portability subdir-objects])
 AM_SANITY_CHECK
 AC_CONFIG_HEADERS(config.h)
 AC_CONFIG_SRCDIR([libsecret/secret-value.c])
@@ -66,7 +66,7 @@ AC_PROG_LN_S
 AC_PROG_MAKE_SET
 AM_PROG_LIBTOOL
 IT_PROG_INTLTOOL($INTLTOOL_REQ)
-AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
+PKG_PROG_PKG_CONFIG
 
 GETTEXT_PACKAGE=libsecret
 AC_SUBST([GETTEXT_PACKAGE])

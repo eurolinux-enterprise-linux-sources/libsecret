@@ -6,21 +6,18 @@
 %endif
 
 Name:           libsecret
-Version:        0.18.5
-Release:        2%{?dist}
+Version:        0.18.6
+Release:        1%{?dist}
 Summary:        Library for storing and retrieving passwords and other secrets
 
 License:        LGPLv2+
 URL:            https://wiki.gnome.org/Projects/Libsecret
 Source0:        http://download.gnome.org/sources/libsecret/%{release_version}/libsecret-%{version}.tar.xz
-# https://bugzilla.redhat.com/show_bug.cgi?id=1434474
-Patch0:         libsecret-0.18.5-fix-invalid-secret-transfer-error.patch
 
 BuildRequires:  glib2-devel
 BuildRequires:  gobject-introspection-devel
 BuildRequires:  intltool
 BuildRequires:  libgcrypt-devel >= 1.2.2
-BuildRequires:  vala-devel >= 0.17.2.12
 BuildRequires:  vala
 BuildRequires:  gtk-doc
 BuildRequires:  libxslt-devel
@@ -48,7 +45,6 @@ developing applications that use %{name}.
 
 %prep
 %setup -q
-%patch0 -p1
 
 # Use system valgrind headers instead
 %if 0%{?has_valgrind}
@@ -94,6 +90,10 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
 
 %changelog
+* Thu Mar 29 2018 Kalev Lember <klember@redhat.com> - 0.18.6-1
+- Update to 0.18.6
+- Resolves: #1570013
+
 * Tue Mar 21 2017 David King <dking@redhat.com> - 0.18.5-2
 - Fix invalid secret transfer error (#1434474)
 
